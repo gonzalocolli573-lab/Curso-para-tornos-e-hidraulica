@@ -1,0 +1,1030 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Kiosco - Curso de Tornería e Hidráulica</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet">
+
+  <style>
+    :root {
+      --bg-gradient: radial-gradient(circle at 50% 0%, #1e293b 0%, #0f172a 60%, #020617 100%);
+      --card-bg: rgba(30, 41, 59, 0.75);
+      --card-border: rgba(255, 255, 255, 0.08);
+      --primary: #38bdf8;
+      --primary-hover: #0284c7;
+      --accent: #f59e0b;
+      --success: #10b981;
+      --danger: #ef4444;
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Outfit', sans-serif;
+    }
+
+    body {
+      background: var(--bg-gradient);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 25px 15px 40px;
+    }
+
+    /* BARRA SUPERIOR / HEADER */
+    .top-bar {
+      width: 100%;
+      max-width: 820px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 25px;
+      padding: 12px 20px;
+      background: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--card-border);
+      border-radius: 50px;
+    }
+
+    .badge-kiosco {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--primary);
+    }
+
+    .badge-kiosco .dot {
+      width: 10px;
+      height: 10px;
+      background: var(--success);
+      border-radius: 50%;
+      box-shadow: 0 0 10px var(--success);
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+
+      0%,
+      100% {
+        opacity: 1;
+        transform: scale(1);
+      }
+
+      50% {
+        opacity: 0.4;
+        transform: scale(1.2);
+      }
+    }
+
+    .reloj-vivo {
+      font-size: 0.95rem;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      color: #cbd5e1;
+    }
+
+    /* CONTENEDOR PRINCIPAL */
+    .main-container {
+      width: 100%;
+      max-width: 820px;
+      background: var(--card-bg);
+      backdrop-filter: blur(20px);
+      border: 1px solid var(--card-border);
+      border-radius: 24px;
+      padding: 35px 30px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
+    }
+
+    .header-titles {
+      text-align: center;
+      margin-bottom: 28px;
+    }
+
+    .header-titles h1 {
+      font-size: 2.1rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #ffffff 40%, var(--primary) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 6px;
+    }
+
+    .header-titles p {
+      color: var(--text-muted);
+      font-size: 1.05rem;
+    }
+
+    /* BOTONES DE NAVEGACIÓN (TABS) */
+    .tabs-nav {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      background: rgba(15, 23, 42, 0.8);
+      padding: 6px;
+      border-radius: 16px;
+      border: 1px solid var(--card-border);
+      margin-bottom: 30px;
+    }
+
+    .tab-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      padding: 14px 10px;
+      border-radius: 12px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 5px;
+      transition: all 0.25s ease;
+    }
+
+    .tab-btn span.icon {
+      font-size: 1.3rem;
+    }
+
+    .tab-btn:hover {
+      color: #fff;
+      background: rgba(255, 255, 255, 0.04);
+    }
+
+    .tab-btn.active {
+      background: var(--primary);
+      color: #090d16;
+      font-weight: 700;
+      box-shadow: 0 4px 15px rgba(56, 189, 248, 0.35);
+    }
+
+    /* SECCIONES / PANELES */
+    .panel-section {
+      display: none;
+    }
+
+    .panel-section.active {
+      display: block;
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(8px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* FORMULARIOS Y CAMPOS */
+    .form-group {
+      margin-bottom: 18px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #cbd5e1;
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 15px 18px;
+      border-radius: 14px;
+      border: 1px solid #334155;
+      background: rgba(15, 23, 42, 0.7);
+      color: #fff;
+      font-size: 1.05rem;
+      outline: none;
+      transition: all 0.25s ease;
+    }
+
+    .form-control:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 4px rgba(56, 189, 248, 0.2);
+    }
+
+    .form-grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    /* BOTONES DE ACCIÓN */
+    .btn-submit {
+      width: 100%;
+      padding: 16px;
+      border-radius: 14px;
+      border: none;
+      font-size: 1.1rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      transition: all 0.3s;
+      margin-top: 10px;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--primary) 0%, #0284c7 100%);
+      color: #041324;
+      box-shadow: 0 8px 20px rgba(56, 189, 248, 0.3);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 25px rgba(56, 189, 248, 0.45);
+    }
+
+    .btn-success {
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      color: #ffffff;
+      box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3);
+    }
+
+    .btn-success:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 25px rgba(16, 185, 129, 0.45);
+    }
+
+    .btn-submit:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none !important;
+    }
+
+    /* ALERTAS / MENSAJES DE ESTADO */
+    .alert-box {
+      padding: 16px 20px;
+      border-radius: 14px;
+      margin-bottom: 22px;
+      font-size: 1rem;
+      font-weight: 600;
+      display: none;
+      text-align: center;
+      animation: fadeIn 0.25s ease;
+    }
+
+    .alert-box.success {
+      background: rgba(16, 185, 129, 0.15);
+      border: 1px solid var(--success);
+      color: #6ee7b7;
+      display: block;
+    }
+
+    .alert-box.error {
+      background: rgba(239, 68, 68, 0.15);
+      border: 1px solid var(--danger);
+      color: #fca5a5;
+      display: block;
+    }
+
+    .alert-box.info {
+      background: rgba(56, 189, 248, 0.15);
+      border: 1px solid var(--primary);
+      color: #bae6fd;
+      display: block;
+    }
+
+    .btn-alerta-accion {
+      display: inline-block;
+      margin-top: 10px;
+      padding: 8px 18px;
+      border-radius: 10px;
+      background: var(--primary);
+      color: #041324;
+      font-weight: 700;
+      font-size: 0.9rem;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-alerta-accion:hover {
+      background: #0284c7;
+      color: #fff;
+    }
+
+    /* TARJETA DE ASISTENCIA RÁPIDA (MODO KIOSCO) */
+    .kiosco-card {
+      text-align: center;
+      padding: 15px 10px;
+    }
+
+    .kiosco-card .input-gigante {
+      font-size: 1.8rem;
+      text-align: center;
+      letter-spacing: 2px;
+      padding: 18px;
+      margin-bottom: 18px;
+      font-weight: 700;
+    }
+
+    .kiosco-banner {
+      background: rgba(16, 185, 129, 0.15);
+      border: 2px solid var(--success);
+      border-radius: 16px;
+      padding: 24px;
+      margin-top: 22px;
+      display: none;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .kiosco-banner h3 {
+      font-size: 1.5rem;
+      color: #6ee7b7;
+      margin-bottom: 6px;
+    }
+
+    .kiosco-banner p {
+      font-size: 1.05rem;
+      color: #cbd5e1;
+    }
+
+    /* TARJETA DE RESULTADO DE CONSULTA Y SEGUIMIENTO */
+    .card-estado {
+      background: rgba(15, 23, 42, 0.85);
+      border: 1px solid var(--card-border);
+      border-radius: 18px;
+      padding: 24px;
+      margin-top: 22px;
+      display: none;
+    }
+
+    .alumno-title {
+      border-bottom: 1px solid #334155;
+      padding-bottom: 14px;
+      margin-bottom: 20px;
+    }
+
+    .alumno-title h2 {
+      font-size: 1.6rem;
+      color: #fff;
+    }
+
+    .alumno-title p {
+      color: var(--primary);
+      font-size: 0.95rem;
+      font-weight: 500;
+    }
+
+    .grid-metricas {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 14px;
+      margin-bottom: 22px;
+    }
+
+    .caja-metrica {
+      background: #1e293b;
+      padding: 16px 12px;
+      border-radius: 14px;
+      text-align: center;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .caja-metrica .valor {
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: var(--primary);
+    }
+
+    .caja-metrica .etiqueta {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-top: 4px;
+      font-weight: 600;
+    }
+
+    .progress-bar-container {
+      background: #334155;
+      height: 14px;
+      border-radius: 10px;
+      overflow: hidden;
+      margin-bottom: 20px;
+    }
+
+    .progress-bar-val {
+      height: 100%;
+      background: var(--primary);
+      width: 0%;
+      transition: width 0.7s ease, background 0.4s ease;
+    }
+
+    .badge-condicion {
+      display: block;
+      text-align: center;
+      padding: 14px;
+      border-radius: 12px;
+      font-size: 1.05rem;
+      font-weight: 700;
+      margin-bottom: 20px;
+    }
+
+    .badge-condicion.aprobado {
+      background: rgba(16, 185, 129, 0.15);
+      border: 1px solid var(--success);
+      color: #6ee7b7;
+    }
+
+    .badge-condicion.regular {
+      background: rgba(245, 158, 11, 0.15);
+      border: 1px solid var(--accent);
+      color: #fde68a;
+    }
+
+    .badge-condicion.riesgo {
+      background: rgba(239, 68, 68, 0.15);
+      border: 1px solid var(--danger);
+      color: #fca5a5;
+    }
+
+    /* HISTORIAL DE ASISTENCIAS */
+    .historial-box {
+      margin-top: 15px;
+      background: #0f172a;
+      border-radius: 12px;
+      padding: 14px;
+    }
+
+    .historial-box h4 {
+      font-size: 0.95rem;
+      color: #94a3b8;
+      margin-bottom: 10px;
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+
+    .historial-list {
+      list-style: none;
+      max-height: 180px;
+      overflow-y: auto;
+    }
+
+    .historial-list li {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 12px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      font-size: 0.9rem;
+    }
+
+    .historial-list li:last-child {
+      border-bottom: none;
+    }
+
+    .tag-presente {
+      color: #6ee7b7;
+      font-weight: 600;
+    }
+
+    @media (max-width: 650px) {
+      .form-grid-2 {
+        grid-template-columns: 1fr;
+      }
+
+      .grid-metricas {
+        grid-template-columns: 1fr;
+      }
+
+      .header-titles h1 {
+        font-size: 1.6rem;
+      }
+
+      .tab-btn {
+        font-size: 0.85rem;
+        padding: 10px 5px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- BARRA SUPERIOR -->
+  <div class="top-bar">
+    <div class="badge-kiosco">
+      <span class="dot"></span> Kiosco Tornería e Hidráulica
+    </div>
+    <div class="reloj-vivo" id="relojVivo">--:--:--</div>
+  </div>
+
+  <!-- CONTENEDOR CENTRAL -->
+  <div class="main-container">
+
+    <div class="header-titles">
+      <h1>Panel de Aula y Taller</h1>
+      <p>Selecciona una opción para continuar</p>
+    </div>
+
+    <!-- BOTONES DE NAVEGACIÓN -->
+    <div class="tabs-nav">
+      <button class="tab-btn active" onclick="cambiarTab('asistencia')">
+        <span class="icon">⏱️</span> Marcar Asistencia
+      </button>
+      <button class="tab-btn" onclick="cambiarTab('inscripcion')">
+        <span class="icon">✍️</span> Inscribirme
+      </button>
+      <button class="tab-btn" onclick="cambiarTab('estado')">
+        <span class="icon">📊</span> Mi Estado / Curso
+      </button>
+    </div>
+
+    <!-- MENSAJE GLOBAL DE ALERTA -->
+    <div id="alertaGlobal" class="alert-box"></div>
+
+    <!-- ==================================================== -->
+    <!-- 1. MÓDULO DE ASISTENCIA RÁPIDA (CHECK-IN DE CLASE) -->
+    <!-- ==================================================== -->
+    <div id="panel-asistencia" class="panel-section active">
+      <div class="kiosco-card">
+        <div class="form-group">
+          <label for="dniAsistencia" style="font-size: 1.1rem;">Ingresa tu número de DNI para ingresar:</label>
+          <input type="text" id="dniAsistencia" class="form-control input-gigante" placeholder="Ej: 40123456" autofocus>
+        </div>
+
+        <button id="btnRegistrarAsis" class="btn-submit btn-success" onclick="ejecutarAsistencia()">
+          ⚡ MARCAR ASISTENCIA AHORA
+        </button>
+
+        <div id="bannerAsistenciaExitosa" class="kiosco-banner">
+          <h3 id="asistNombre">¡Asistencia Confirmada!</h3>
+          <p id="asistDetalle">Registrado correctamente a las --:-- hs</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================================================== -->
+    <!-- 2. MÓDULO DE INSCRIPCIÓN DE ALUMNOS -->
+    <!-- ==================================================== -->
+    <div id="panel-inscripcion" class="panel-section">
+      <form id="formInscripcion" onsubmit="event.preventDefault(); ejecutarInscripcion();">
+        <div class="form-group">
+          <label for="insNombre">Nombre y Apellido Completo *</label>
+          <input type="text" id="insNombre" class="form-control" placeholder="Ej: Juan Pérez" required>
+        </div>
+
+        <div class="form-grid-2">
+          <div class="form-group">
+            <label for="insDni">DNI (Sin puntos) *</label>
+            <input type="text" id="insDni" class="form-control" placeholder="Ej: 38123456" required>
+          </div>
+          <div class="form-group">
+            <label for="insTelefono">Teléfono / WhatsApp</label>
+            <input type="text" id="insTelefono" class="form-control" placeholder="Ej: 11 2345-6789">
+          </div>
+        </div>
+
+        <div class="form-grid-2">
+          <div class="form-group">
+            <label for="insEmail">Correo Electrónico (Opcional)</label>
+            <input type="email" id="insEmail" class="form-control" placeholder="juan@ejemplo.com">
+          </div>
+          <div class="form-group">
+            <label for="insCurso">Especialidad / Taller *</label>
+            <select id="insCurso" class="form-control">
+              <option value="Tornería e Hidráulica">Tornería e Hidráulica (Integral)</option>
+              <option value="Tornería y Mecanizado">Tornería y Mecanizado</option>
+              <option value="Sistemas Hidráulicos">Sistemas Hidráulicos</option>
+            </select>
+          </div>
+        </div>
+
+        <button type="submit" id="btnInscribir" class="btn-submit btn-primary">
+          📝 COMPLETAR MI INSCRIPCIÓN
+        </button>
+      </form>
+    </div>
+
+    <!-- ==================================================== -->
+    <!-- 3. MÓDULO DE ESTADO Y FINALIZACIÓN -->
+    <!-- ==================================================== -->
+    <div id="panel-estado" class="panel-section">
+      <div class="form-group">
+        <label for="dniConsulta">Ingresa tu DNI para consultar tus asistencias y condición:</label>
+        <div style="display: flex; gap: 10px;">
+          <input type="text" id="dniConsulta" class="form-control" placeholder="DNI sin puntos...">
+          <button id="btnConsultarEstado" class="btn-submit btn-primary"
+            style="width: auto; padding: 0 25px; margin-top: 0;" onclick="ejecutarConsultaEstado()">
+            🔍 Consultar
+          </button>
+        </div>
+        <p style="font-size: 0.82rem; color: var(--text-muted); margin-top: 8px;">
+          💡 Tip: Puedes consultar o compartir tu estado directamente agregando <code>?dni=TU_DNI</code> a la URL.
+        </p>
+      </div>
+
+      <!-- TARJETA CON LOS RESULTADOS DEL ALUMNO -->
+      <div id="tarjetaResultadoEstado" class="card-estado">
+        <div class="alumno-title">
+          <h2 id="resNombre">-</h2>
+          <p id="resCursoDni">-</p>
+        </div>
+
+        <div class="grid-metricas">
+          <div class="caja-metrica">
+            <div class="valor" id="resAsistencias">0</div>
+            <div class="etiqueta">Asistencias</div>
+          </div>
+          <div class="caja-metrica">
+            <div class="valor" id="resInasistencias">0</div>
+            <div class="etiqueta">Inasistencias</div>
+          </div>
+          <div class="caja-metrica">
+            <div class="valor" id="resPorcentaje">0%</div>
+            <div class="etiqueta">% Asistencia</div>
+          </div>
+        </div>
+
+        <div class="progress-bar-container">
+          <div id="barraProgreso" class="progress-bar-val"></div>
+        </div>
+
+        <div id="badgeCondicion" class="badge-condicion">-</div>
+
+        <div class="historial-box">
+          <h4>Últimas Asistencias Registradas</h4>
+          <ul id="listaHistorial" class="historial-list">
+            <li><span>Sin registros</span></li>
+          </ul>
+        </div>
+
+        <div style="text-align: center; margin-top: 18px;">
+          <button type="button" id="btnCopiarEnlace" class="btn-submit"
+            style="width: auto; margin: 0 auto; padding: 9px 18px; font-size: 0.85rem; background: rgba(255, 255, 255, 0.08); border: 1px solid var(--card-border); color: #cbd5e1;"
+            onclick="copiarEnlaceDirecto()">
+            🔗 Copiar enlace directo a mi estado
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    // ============================================================
+    // PARÁMETROS INYECTADOS POR GOOGLE APPS SCRIPT TEMPLATE
+    // ============================================================
+    var SERVER_URL_PARAMS = {};
+    try {
+      SERVER_URL_PARAMS = <?!= JSON.stringify((typeof urlParams !== 'undefined' && urlParams) ? urlParams : {}) ?>;
+    } catch(e) {
+      SERVER_URL_PARAMS = {};
+    }
+
+    // ============================================================
+    // RELOJ EN VIVO
+    // ============================================================
+    function actualizarReloj() {
+      var ahora = new Date();
+      var h = String(ahora.getHours()).padStart(2, '0');
+      var m = String(ahora.getMinutes()).padStart(2, '0');
+      var s = String(ahora.getSeconds()).padStart(2, '0');
+      document.getElementById('relojVivo').innerText = h + ":" + m + ":" + s + " hs";
+    }
+    setInterval(actualizarReloj, 1000);
+    actualizarReloj();
+
+    // ============================================================
+    // NAVEGACIÓN ENTRE TABS
+    // ============================================================
+    function cambiarTab(tabName) {
+      limpiarAlertas();
+      var btns = document.querySelectorAll('.tab-btn');
+      var panels = document.querySelectorAll('.panel-section');
+
+      btns.forEach(b => b.classList.remove('active'));
+      panels.forEach(p => p.classList.remove('active'));
+
+      if (tabName === 'asistencia') {
+        btns[0].classList.add('active');
+        document.getElementById('panel-asistencia').classList.add('active');
+        document.getElementById('dniAsistencia').focus();
+      } else if (tabName === 'inscripcion') {
+        btns[1].classList.add('active');
+        document.getElementById('panel-inscripcion').classList.add('active');
+        document.getElementById('insNombre').focus();
+      } else if (tabName === 'estado') {
+        btns[2].classList.add('active');
+        document.getElementById('panel-estado').classList.add('active');
+        document.getElementById('dniConsulta').focus();
+      }
+    }
+
+    function mostrarAlerta(mensaje, tipo, accionBtn) {
+      var box = document.getElementById('alertaGlobal');
+      box.className = 'alert-box ' + tipo;
+      box.innerHTML = '<div>' + mensaje + '</div>';
+
+      if (accionBtn) {
+        var btn = document.createElement('button');
+        btn.innerText = accionBtn.texto;
+        btn.className = 'btn-alerta-accion';
+        btn.type = 'button';
+        btn.onclick = accionBtn.onClick;
+        box.appendChild(btn);
+      }
+
+      box.style.display = 'block';
+    }
+
+    function limpiarAlertas() {
+      var box = document.getElementById('alertaGlobal');
+      box.style.display = 'none';
+      box.innerHTML = '';
+    }
+
+    // ============================================================
+    // 1. MARCAR ASISTENCIA
+    // ============================================================
+    function ejecutarAsistencia() {
+      var input = document.getElementById('dniAsistencia');
+      var dni = input.value.trim().replace(/\D/g, '');
+      var btn = document.getElementById('btnRegistrarAsis');
+      var banner = document.getElementById('bannerAsistenciaExitosa');
+
+      if (!dni) {
+        mostrarAlerta("Por favor, ingresa tu número de DNI para registrar la asistencia.", "error");
+        input.focus();
+        return;
+      }
+
+      btn.disabled = true;
+      limpiarAlertas();
+      banner.style.display = 'none';
+
+      mostrarAlerta("Registrando asistencia en la planilla...", "info");
+
+      if (typeof google === 'undefined' || !google.script || !google.script.run) {
+        btn.disabled = false;
+        mostrarAlerta("Aviso: Debes abrir esta aplicación desde el enlace de Google Apps Script para conectar con la planilla real.", "error");
+        return;
+      }
+
+      google.script.run
+        .withSuccessHandler(function (res) {
+          btn.disabled = false;
+          if (res && res.exito) {
+            limpiarAlertas();
+            document.getElementById('asistNombre').innerText = res.nombre;
+            document.getElementById('asistDetalle').innerText = res.mensaje + " (" + res.hora + " hs)";
+            banner.style.display = 'block';
+            input.value = '';
+
+            setTimeout(function () {
+              banner.style.display = 'none';
+              input.focus();
+            }, 7000);
+
+          } else {
+            mostrarAlerta(res ? res.mensaje : "Error al registrar asistencia.", "error", {
+              texto: "✍️ ¿No estás inscripto? Inscríbete aquí",
+              onClick: function() { cambiarTab('inscripcion'); }
+            });
+          }
+        })
+        .withFailureHandler(function (err) {
+          btn.disabled = false;
+          mostrarAlerta("Error de conexión con la planilla: " + err.message, "error");
+        })
+        .registrarAsistencia(dni);
+    }
+
+    document.getElementById('dniAsistencia').addEventListener('keypress', function (e) {
+      if (e.key === 'Enter') ejecutarAsistencia();
+    });
+
+    // ============================================================
+    // 2. REGISTRAR INSCRIPCIÓN
+    // ============================================================
+    function ejecutarInscripcion() {
+      var datos = {
+        nombre: document.getElementById('insNombre').value.trim(),
+        dni: document.getElementById('insDni').value.trim().replace(/\D/g, ''),
+        telefono: document.getElementById('insTelefono').value.trim(),
+        email: document.getElementById('insEmail').value.trim(),
+        curso: document.getElementById('insCurso').value
+      };
+
+      var btn = document.getElementById('btnInscribir');
+      btn.disabled = true;
+      mostrarAlerta("Guardando inscripción en la hoja de inscriptos...", "info");
+
+      if (typeof google === 'undefined' || !google.script || !google.script.run) {
+        btn.disabled = false;
+        mostrarAlerta("Aviso: Debes abrir esta aplicación desde el enlace de Google Apps Script para guardar datos reales.", "error");
+        return;
+      }
+
+      google.script.run
+        .withSuccessHandler(function (res) {
+          btn.disabled = false;
+          if (res && res.exito) {
+            mostrarAlerta(res.mensaje, "success", {
+              texto: "🔍 Ver mi estado ahora",
+              onClick: function() {
+                cambiarTab('estado');
+                document.getElementById('dniConsulta').value = datos.dni;
+                ejecutarConsultaEstado();
+              }
+            });
+            document.getElementById('formInscripcion').reset();
+          } else {
+            mostrarAlerta(res ? res.mensaje : "No se pudo registrar la inscripción.", "error");
+          }
+        })
+        .withFailureHandler(function (err) {
+          btn.disabled = false;
+          mostrarAlerta("Error al inscribir: " + err.message, "error");
+        })
+        .inscribirAlumno(datos);
+    }
+
+    // ============================================================
+    // 3. CONSULTAR ESTADO Y SEGUIMIENTO
+    // ============================================================
+    function ejecutarConsultaEstado() {
+      var input = document.getElementById('dniConsulta');
+      var dni = input.value.trim().replace(/\D/g, '');
+      var btn = document.getElementById('btnConsultarEstado');
+      var tarjeta = document.getElementById('tarjetaResultadoEstado');
+
+      if (!dni) {
+        mostrarAlerta("Ingresa tu número de DNI para consultar tu estado.", "error");
+        input.focus();
+        return;
+      }
+
+      btn.disabled = true;
+      tarjeta.style.display = 'none';
+      mostrarAlerta("Consultando estado y asistencias en la planilla...", "info");
+
+      if (typeof google === 'undefined' || !google.script || !google.script.run) {
+        btn.disabled = false;
+        mostrarAlerta("Aviso: Para consultar datos reales, debes abrir esta aplicación desde la URL de Google Apps Script (implementada como Web App).", "error");
+        return;
+      }
+
+      google.script.run
+        .withSuccessHandler(function (res) {
+          btn.disabled = false;
+          if (res && res.encontrado) {
+            limpiarAlertas();
+            document.getElementById('resNombre').innerText = res.nombre;
+            document.getElementById('resCursoDni').innerText = "DNI: " + res.dni + " | Curso: " + res.curso;
+            document.getElementById('resAsistencias').innerText = res.asistencias;
+            document.getElementById('resInasistencias').innerText = res.ausentes;
+            document.getElementById('resPorcentaje').innerText = res.porcentaje + "%";
+
+            var barra = document.getElementById('barraProgreso');
+            barra.style.width = res.porcentaje + "%";
+
+            var badge = document.getElementById('badgeCondicion');
+            badge.innerText = "Condición: " + res.condicion;
+
+            if (res.porcentaje >= 75) {
+              barra.style.background = "#10b981";
+              badge.className = "badge-condicion aprobado";
+            } else if (res.porcentaje >= 60) {
+              barra.style.background = "#f59e0b";
+              badge.className = "badge-condicion regular";
+            } else {
+              barra.style.background = "#ef4444";
+              badge.className = "badge-condicion riesgo";
+            }
+
+            // Historial de asistencias
+            var lista = document.getElementById('listaHistorial');
+            lista.innerHTML = '';
+            if (res.historial && res.historial.length > 0) {
+              res.historial.forEach(function (item) {
+                var li = document.createElement('li');
+                li.innerHTML = "<span>📅 " + item.fecha + " (" + item.hora + " hs)</span> <span class='tag-presente'>✓ " + item.estado + "</span>";
+                lista.appendChild(li);
+              });
+            } else {
+              lista.innerHTML = "<li><span>Sin clases registradas aún.</span></li>";
+            }
+
+            tarjeta.style.display = 'block';
+          } else {
+            var msg = (res && res.mensaje) ? res.mensaje : ("No se encontró ningún alumno con el DNI " + dni + ".");
+            mostrarAlerta(msg, "error", {
+              texto: "✍️ Inscribirme en el curso ahora",
+              onClick: function() {
+                cambiarTab('inscripcion');
+                document.getElementById('insDni').value = dni;
+              }
+            });
+          }
+        })
+        .withFailureHandler(function (err) {
+          btn.disabled = false;
+          mostrarAlerta("Error de conexión con la planilla: " + err.message, "error");
+        })
+        .consultarEstadoAlumno(dni);
+    }
+
+    document.getElementById('dniConsulta').addEventListener('keypress', function (e) {
+      if (e.key === 'Enter') ejecutarConsultaEstado();
+    });
+
+    // ============================================================
+    // COPIAR ENLACE DIRECTO AL ESTADO
+    // ============================================================
+    function copiarEnlaceDirecto() {
+      var dni = document.getElementById('dniConsulta').value.trim().replace(/\D/g, '');
+      if (!dni) return;
+
+      var baseUrl = window.location.href.split('?')[0];
+      var urlDirecta = baseUrl + "?dni=" + dni;
+
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(urlDirecta).then(function() {
+          var btn = document.getElementById('btnCopiarEnlace');
+          var originalText = btn.innerText;
+          btn.innerText = "✅ ¡Enlace copiado al portapapeles!";
+          setTimeout(function() { btn.innerText = originalText; }, 3000);
+        });
+      } else {
+        prompt("Copia tu enlace directo:", urlDirecta);
+      }
+    }
+
+    // ============================================================
+    // DETECCIÓN AUTOMÁTICA DE PARÁMETROS EN LA URL
+    // ============================================================
+    function procesarParametrosUrl() {
+      var p = SERVER_URL_PARAMS || {};
+      var dni = p.dni || p.documento || p.estado || p.consultar || "";
+      var tab = (p.tab || p.seccion || p.accion || "").toLowerCase();
+
+      // Fallback desde window.location en caso de ejecución directa o iframe
+      try {
+        var searchParams = new URLSearchParams(window.location.search);
+        if (!dni) dni = searchParams.get('dni') || searchParams.get('documento') || searchParams.get('estado') || searchParams.get('consultar') || "";
+        if (!tab) tab = (searchParams.get('tab') || searchParams.get('seccion') || searchParams.get('accion') || "").toLowerCase();
+      } catch (err) {}
+
+      // Si viene DNI o se pidió la sección estado/consultar
+      if (dni || tab === 'estado' || tab === 'consultar') {
+        cambiarTab('estado');
+        if (dni) {
+          var cleanDni = String(dni).replace(/\D/g, '').trim();
+          document.getElementById('dniConsulta').value = cleanDni;
+          ejecutarConsultaEstado();
+        }
+      } else if (tab === 'inscripcion' || tab === 'inscribir') {
+        cambiarTab('inscripcion');
+      }
+
+      // Listener para sandbox de Apps Script (google.script.url.getLocation)
+      if (typeof google !== 'undefined' && google.script && google.script.url && google.script.url.getLocation) {
+        google.script.url.getLocation(function(loc) {
+          if (loc && loc.parameter) {
+            var lp = loc.parameter;
+            var ldni = lp.dni || lp.documento || lp.estado || lp.consultar || "";
+            var ltab = (lp.tab || lp.seccion || lp.accion || "").toLowerCase();
+
+            if (ldni) {
+              var cleanLdni = String(ldni).replace(/\D/g, '').trim();
+              cambiarTab('estado');
+              document.getElementById('dniConsulta').value = cleanLdni;
+              ejecutarConsultaEstado();
+            } else if (ltab === 'estado' || ltab === 'consultar') {
+              cambiarTab('estado');
+            } else if (ltab === 'inscripcion' || ltab === 'inscribir') {
+              cambiarTab('inscripcion');
+            }
+          }
+        });
+      }
+    }
+
+    window.addEventListener('DOMContentLoaded', procesarParametrosUrl);
+  </script>
+
+</body>
+
+</html>

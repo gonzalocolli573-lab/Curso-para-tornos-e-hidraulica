@@ -1,0 +1,45 @@
+services:
+  db:
+    image: postgres:15-alpine
+    container_name: db_kiosco
+    restart: always
+    environment:
+      POSTGRES_DB: kiosco_db
+      POSTGRES_USER: usuario_kiosco
+      POSTGRES_PASSWORD: clave_kiosco_123
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_datos:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U usuario_kiosco -d kiosco_db"]
+      interval: 3s
+      timeout: 3s
+      retries: 5
+
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: web_kiosco
+    restart: always
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/app
+      - media_datos:/app/media
+    ports:
+      - "8000:8000"
+    environment:
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_NAME=kiosco_db
+      - DB_USER=usuario_kiosco
+      - DB_PASSWORD=clave_kiosco_123
+      - PYTHONUNBUFFERED=1
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  postgres_datos:
+  media_datos:
