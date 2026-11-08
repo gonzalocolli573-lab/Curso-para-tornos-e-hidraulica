@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kiosco - Tornería e Hidráulica</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body, html {
+      width: 100%;
+      height: 100%;
+      background-color: #0b0f19;
+      color: #fff;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      overflow: hidden;
+    }
+    .kiosco-container {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .kiosco-slide {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      transition: opacity 1.8s ease-in-out;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .kiosco-slide.active {
+      opacity: 1;
+    }
+    .kiosco-slide img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+    .badge-header {
+      position: absolute;
+      top: 25px;
+      left: 30px;
+      background: rgba(15, 23, 42, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      padding: 10px 22px;
+      border-radius: 25px;
+      backdrop-filter: blur(8px);
+      font-size: 1.1rem;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      z-index: 10;
+    }
+    .badge-timer {
+      position: absolute;
+      top: 25px;
+      right: 30px;
+      background: rgba(15, 23, 42, 0.7);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 8px 18px;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      color: #94a3b8;
+      z-index: 10;
+    }
+    .pie-info {
+      position: absolute;
+      bottom: 30px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(15, 23, 42, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      padding: 14px 35px;
+      border-radius: 35px;
+      backdrop-filter: blur(10px);
+      text-align: center;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+      z-index: 10;
+    }
+    .pie-info h2 {
+      font-size: 1.4rem;
+      color: #38bdf8;
+      margin-bottom: 4px;
+    }
+    .pie-info p {
+      font-size: 1rem;
+      color: #cbd5e1;
+    }
+    .sin-fotos {
+      text-align: center;
+      color: #94a3b8;
+    }
+    .sin-fotos a {
+      color: #38bdf8;
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="kiosco-container">
+    <div class="badge-header">⚙️ Tornería e Hidráulica • Trabajos</div>
+    <div class="badge-timer">Cambio automático cada 5 min</div>
+
+    {% if trabajos %}
+      {% for t in trabajos %}
+        <div class="kiosco-slide {% if forloop.first %}active{% endif %}">
+          <img src="{{ t.imagen.url }}" alt="{{ t.titulo }}">
+          <div class="pie-info">
+            <h2>{{ t.titulo }}</h2>
+            <p>{{ t.get_categoria_display }}{% if t.descripcion %} — {{ t.descripcion }}{% endif %}</p>
+          </div>
+        </div>
+      {% endfor %}
+    {% else %}
+      <div class="sin-fotos">
+        <h2>No hay trabajos cargados aún</h2>
+        <p>Carga fotos desde el <a href="/admin/">Panel de Administración</a>.</p>
+      </div>
+    {% endif %}
+  </div>
+
+  <script>
+    const slides = document.querySelectorAll('.kiosco-slide');
+    let index = 0;
+
+    // 5 MINUTOS = 5 * 60 * 1000 = 300.000 ms
+    const INTERVALO = 5 * 60 * 1000;
+
+    function siguienteFoto() {
+      if (slides.length <= 1) return;
+      slides[index].classList.remove('active');
+      index = (index + 1) % slides.length;
+      slides[index].classList.add('active');
+    }
+
+    if (slides.length > 1) {
+      setInterval(siguienteFoto, INTERVALO);
+    }
+  </script>
+
+</body>
+</html>
