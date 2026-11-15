@@ -1,123 +1,68 @@
-# Método Kiosco – Sistema de Gestión de Inscripciones y Asistencia
+# Kiosco Tornería e Hidráulica (100% Dockerizado)
 
-## 1. Descripción del proyecto
+## 1. Qué se hizo
 
-El proyecto consiste en el desarrollo de una aplicación web denominada Método Kiosco, destinada a gestionar las inscripciones y el control de asistencia de los participantes del curso de formación profesional "Curso de Torno e Hidráulica".
+### 🐳 Infraestructura
+- **Aplicación 100% Dockerizada**: Django y PostgreSQL se ejecutan juntos dentro de contenedores Docker.
+- **Sin necesidad de instalar Python o paquetes en Windows**: Todo corre aislado en Docker.
+- **Migraciones automáticas**: Al iniciar el contenedor `web`, espera a que PostgreSQL esté listo y aplica automáticamente todas las migraciones.
+- **Volúmenes persistentes**:
+  - `postgres_datos`: La base de datos nunca se borra al reiniciar o apagar los contenedores.
+  - `media_datos`: Las fotos subidas desde el panel de administración se conservan permanentemente.
+  - El código está montado en vivo (`.:/app`): Cualquier cambio en HTML, CSS o Python se refleja de inmediato sin reconstruir la imagen.
 
-El sistema permite que los alumnos realicen su inscripción y registren su asistencia mediante una computadora, utilizando una interfaz sencilla y automatizada.
+### 🖼️ Pantalla Kiosco (Novedades)
+- **Fondo dinámico con imágenes rotativas**: La pantalla de inicio muestra un carrusel de imágenes de trabajos realizados que cambian automáticamente cada 5 minutos, generando un efecto visual atractivo para los clientes.
+- Las imágenes se cargan desde la base de datos y se administran fácilmente desde el panel de administración.
 
-El objetivo principal es mejorar la organización administrativa del curso, centralizar la información y reducir los errores que pueden producirse mediante registros manuales.
-
-## 2. Objetivos
-
-- Digitalizar las inscripciones de los alumnos.
-- Registrar y organizar los datos personales.
-- Automatizar el control de asistencia.
-- Realizar el seguimiento individual de los participantes.
-- Calcular porcentajes de asistencia.
-- Facilitar la finalización del curso y la generación de certificados.
-
-## 3. Funcionalidades principales
-
-### Inscripción
-Permite ingresar los siguientes datos:
-- Nombre completo.
-- DNI.
-- Fecha de nacimiento.
-- Localidad.
-- Ocupación.
-
-El sistema verifica la existencia de inscripciones anteriores para evitar duplicaciones.
-
-### Control de asistencia
-Permite identificar al alumno mediante su DNI y registrar su ingreso a cada una de las 10 clases del curso.
-
-Se controla que no existan registros duplicados para una misma clase.
-
-### Seguimiento
-El sistema actualiza:
-- Cantidad de clases asistidas.
-- Porcentaje de asistencia.
-- Estado del alumno.
-
-### Finalización y certificados
-Al completar las 10 clases, el sistema procesa la finalización y genera un certificado en formato PDF, que se almacena en Google Drive.
-
-## 4. Tecnologías utilizadas
-
-- Antigravity: entorno utilizado para desarrollar el proyecto.
-- Google Apps Script: programación y lógica del sistema.
-- HTML: desarrollo de la interfaz.
-- Google Sheets: almacenamiento de información.
-- Google Drive: almacenamiento de certificados.
-- Docker: contenerización y configuración del entorno del proyecto.
-- GitHub: almacenamiento y documentación del código fuente.
-
-## 5. Estructura del proyecto
-
-El repositorio contiene la carpeta principal del proyecto y sus archivos correspondientes.
-
-Dentro de la estructura se incluyen:
-- Archivos de programación y lógica.
-- Archivos HTML de la interfaz.
-- Archivos de configuración.
-- Componentes y extensiones utilizados.
-- Configuración relacionada con Docker.
-- Este documento README.md.
-
-## 6. Requisitos necesarios
-
-- Una computadora con conexión a Internet.
-- Navegador web actualizado.
-- Cuenta de Google.
-- Acceso a Google Apps Script.
-- Hoja de cálculo de Google Sheets.
-- Google Drive para almacenar los certificados.
-- Docker, para trabajar con los componentes configurados para ese entorno.
-
-## 7. Pasos para la configuración y puesta en funcionamiento
-
-1. Acceder a Google Apps Script.
-2. Crear o configurar el proyecto con los archivos correspondientes.
-3. Incorporar el código fuente y los archivos HTML.
-4. Configurar la conexión con Google Sheets.
-5. Preparar las hojas necesarias para inscripciones, asistencia y seguimiento.
-6. Autorizar los permisos solicitados por Google.
-7. Configurar Google Drive para almacenar los certificados.
-8. Implementar la aplicación como aplicación web.
-9. Obtener la URL de acceso.
-10. Abrir la aplicación desde la computadora destinada al uso del kiosco.
-
-## 8. Funcionamiento del sistema
-
-Una vez implementada la aplicación, el usuario puede:
-
-1. Ingresar a la aplicación web.
-2. Seleccionar la opción de inscripción.
-3. Completar sus datos personales.
-4. Guardar la inscripción.
-5. Ingresar a la opción de asistencia.
-6. Identificarse mediante su DNI.
-7. Seleccionar la clase correspondiente para registrar su ingreso.
-
-El sistema procesa la información y actualiza los registros de seguimiento.
-
-## 9. Docker
-
-El proyecto cuenta con una configuración de Docker para contenerizar los componentes preparados para ese entorno.
-
-La configuración permite organizar el entorno de ejecución y facilitar la reproducción de los componentes contenerizados.
-
-Los pasos específicos de construcción y ejecución deben realizarse de acuerdo con los archivos Dockerfile y docker-compose.yml incluidos en el proyecto, si corresponde.
-
-## 10. Resultado esperado
-
-El resultado es una herramienta digital que permite administrar de manera más eficiente las inscripciones y asistencias de un curso de formación profesional.
-
-El Método Kiosco busca simplificar las tareas administrativas, automatizar procesos y mejorar el seguimiento de los alumnos durante el desarrollo de la capacitación.
+### 🤖 Chatbot de Consultas (Nuevo)
+- **Chatbot integrado en la pantalla del kiosco**: Los clientes pueden hacer consultas directamente desde la pantalla, sin necesidad de llamar al personal.
+- El chatbot responde preguntas frecuentes sobre servicios de tornería e hidráulica.
+- **Registro automático en Google Sheets**: Cada consulta realizada por un cliente dentro del chatbot queda guardada automáticamente en una hoja de cálculo de Google Sheets, permitiendo hacer seguimiento de las preguntas más frecuentes y mejorar la atención.
 
 ---
 
-**Proyecto académico: Método Kiosco**
+## 2. Cómo encender todo con un solo comando
 
-**Curso: Torno e Hidráulica**
+Abre tu terminal (PowerShell o CMD) y corre:
+
+```bash
+docker compose -f "C:\Users\gonza\.antigravity-ide\kiosco_django\docker-compose.yml" up --build -d
+```
+
+*(Si ya estás parado dentro de la carpeta `kiosco_django`, simplemente usa `docker compose up --build -d`).*
+
+---
+
+## 3. Crear usuario administrador (Solo la primera vez)
+
+Para poder entrar al panel de administración y cargar las fotos de los trabajos:
+
+```bash
+docker compose -f "C:\Users\gonza\.antigravity-ide\kiosco_django\docker-compose.yml" exec web python manage.py createsuperuser
+```
+
+Te pedirá ingresar un nombre de usuario, email (opcional) y contraseña.
+
+---
+
+## 4. Direcciones de acceso
+- **Pantalla Kiosco (fotos rotando cada 5 min):** [http://localhost:8000/](http://localhost:8000/)
+- **Panel de Administrador (para subir fotos):** [http://localhost:8000/admin/](http://localhost:8000/admin/)
+
+---
+
+## 5. Comandos útiles
+
+- **Ver los registros (logs) en tiempo real:**
+  ```bash
+  docker compose -f "C:\Users\gonza\.antigravity-ide\kiosco_django\docker-compose.yml" logs -f
+  ```
+- **Detener la aplicación:**
+  ```bash
+  docker compose -f "C:\Users\gonza\.antigravity-ide\kiosco_django\docker-compose.yml" down
+  ```
+- **Reiniciar los contenedores:**
+  ```bash
+  docker compose -f "C:\Users\gonza\.antigravity-ide\kiosco_django\docker-compose.yml" restart
+  ```
